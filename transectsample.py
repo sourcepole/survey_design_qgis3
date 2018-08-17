@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from enum import Enum
 import math
 import random
+import sys
 
 class TransectDistanceUnits(Enum):
     Meters = 1
@@ -87,10 +88,16 @@ class TransectSample:
             if clippedBaseline is None:
                 continue
             
+            #Make sure clippedBaseLine is not a geometry collection
+            if QgsWkbTypes.flatType( clippedBaseline.wkbType() ) == QgsWkbTypes.GeometryCollection:
+                clippedBaseline.convertGeometryCollectionToSubclass( QgsWkbTypes.LineGeometry )
+            
             bufferLineClipped = self.clipBufferLine( stratumGeom, clippedBaseline, bufferDist )
             if bufferLineClipped is None:
                 print( '**bufferLineClipped is None**' )
                 continue
+            
+            
             
             nTransects = f.attribute( self.nPointsAttribute )
             print( '*nTransects*' )
@@ -151,10 +158,10 @@ class TransectSample:
                     continue
                 
                 #if lineClipStratum is a multiline, take the part line closest to samplePoint
-                if QgsWkbTypes.flatType( lineClipStratum.wkbType() ) == QgsWkbTypes.MultiLineString:
-                    singleLine = closestMultilineElement( samplePoint, lineClipStratum )
+                '''if QgsWkbTypes.flatType( lineClipStratum.wkbType() ) == QgsWkbTypes.MultiLineString:
+                    singleLine = self.closestMultilineElement( samplePoint, lineClipStratum )
                     if singleLine:
-                        lineClipStratum = singleLine
+                        lineClipStratum = singleLine'''
                 
                 #cancel if length of lineClipStratum is too small
                 transectLength = distanceArea.measureLength( lineClipStratum )
@@ -388,7 +395,7 @@ class TransectSample:
         dist = math.sqrt( pt1.sqrDist( pt2 ) )
         return [ True, dist, pt1, pt2 ]
     
-    def closestMultilineElement( pt, multiLine ):
+    def closestMultilineElement( self, pt, multiLine ):
         if multiLine is None or QgsWkbTypes.flatType( multiLine.wkbType() ) != QgsWkbTypes.MultiLineString:
             return None
         
@@ -405,3 +412,5 @@ class TransectSample:
                 closestLine = currentLine
                 
         return closestLine
+        
+        
