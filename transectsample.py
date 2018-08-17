@@ -150,7 +150,11 @@ class TransectSample:
                 if lineClipStratum.distance( samplePoint ) > 0.000001:
                     continue
                 
-                #if lineClipStratum is a multiline, take the part line closest to sampleQgsPoint
+                #if lineClipStratum is a multiline, take the part line closest to samplePoint
+                if QgsWkbTypes.flatType( lineClipStratum.wkbType() ) == QgsWkbTypes.MultiLineString:
+                    singleLine = closestMultilineElement( samplePoint, lineClipStratum )
+                    if singleLine:
+                        lineClipStratum = singleLine
                 
                 #cancel if length of lineClipStratum is too small
                 transectLength = distanceArea.measureLength( lineClipStratum )
@@ -383,3 +387,21 @@ class TransectSample:
             
         dist = math.sqrt( pt1.sqrDist( pt2 ) )
         return [ True, dist, pt1, pt2 ]
+    
+    def closestMultilineElement( pt, multiLine ):
+        if multiLine is None or QgsWkbTypes.flatType( multiLine.wkbType() ) != QgsWkbTypes.MultiLineString:
+            return None
+        
+        minDist = sys.float_info.max
+        currentDist = 0.0
+        currentLine = None
+        closestLine = None
+        
+        for i in range( 0, multiLine.numGeometries() ):
+            currentLine = multiLine.geometryN( i )
+            currentDist = pt.distance( currentLine )
+            if currentDist < minDist:
+                minDist = currentDist
+                closestLine = currentLine
+                
+        return closestLine
