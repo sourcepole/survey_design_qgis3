@@ -165,9 +165,10 @@ def writeStationCSV( outputDirectory,  transectLayer,  stratumIdAttribute,  tran
             encodedTransectId = encodedTransectId.encode( "utf-8" )
 
         if geom.type() == QgsWkbTypes.LineGeometry:
-            startPoint = geom.geometry().startPoint()
+            coordSeq = geom.constGet().coordinateSequence()
+            startPoint = coordSeq[0][0][0]
             startPoint.transform( coordTransform )
-            endPoint = geom.geometry().endPoint()
+            endPoint = coordSeq[-1][-1][-1]
             endPoint.transform( coordTransform )
             csvWriter.writerow([ str( encodedSurveyId ),  str( encodedStratumId ),  str( encodedTransectId ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), endPoint.x(),  "", "" ])
         elif geom.type() == QgsWkbTypes.PointGeometry:

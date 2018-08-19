@@ -11,6 +11,7 @@ from qgis.core import *
 from qgis.gui import *
 from .surveyutils import *
 from .transectsample import *
+from .surveyproperties import *
 
 FORM_CLASS = uic.loadUiType(os.path.join( os.path.dirname(__file__), 'transectsurveydialogbase.ui'))[0]
 
@@ -44,9 +45,9 @@ class TransectSurveyDialog( QtWidgets.QDialog, FORM_CLASS ):
     def createSample( self ):
         
         #survey properties
-        '''surveyProps = SurveyProperties( self )
+        surveyProps = SurveyProperties( self )
         if surveyProps.exec_() == QDialog.Rejected:
-            return'''
+            return
         
         #save dir
         fileDialog = QFileDialog(  self,  QCoreApplication.translate( 'SurveyDesignDialog', 'Select output directory for result files' )  )
@@ -117,11 +118,11 @@ class TransectSurveyDialog( QtWidgets.QDialog, FORM_CLASS ):
         
         #write csv files
         #Survey.csv
-        '''writeSurveyCSV( fileDialog.selectedFiles()[0],  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
+        writeSurveyCSV( fileDialog.selectedFiles()[0],  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
         transectLayer = QgsVectorLayer( outputLineShape,  "transect",  "ogr" )
         writeStationCSV( saveDir,  transectLayer, "stratum_id",  "station_id",  surveyProps.survey() )
         writeStratumCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
-        writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )'''
+        writeStratumBoundaryCSV( fileDialog.selectedFiles()[0], self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
         writeCatchCSV( saveDir )
         writeLengthCSV( saveDir )
         
