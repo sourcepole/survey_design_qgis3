@@ -51,6 +51,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="decimals">
+        <number>3</number>
+       </property>
        <property name="minimum">
         <double>-1.000000000000000</double>
        </property>
