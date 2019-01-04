@@ -155,6 +155,8 @@ def writeStationCSV( outputDirectory,  transectLayer,  stratumIdAttribute,  tran
     iter = transectLayer.getFeatures()
     for feature in iter:
         geom = feature.geometry()
+        if geom is None:
+            continue
 
         encodedStratumId = feature.attribute( stratumIdAttribute )
         if isinstance( encodedStratumId, unicode ):
@@ -170,11 +172,11 @@ def writeStationCSV( outputDirectory,  transectLayer,  stratumIdAttribute,  tran
             startPoint.transform( coordTransform )
             endPoint = coordSeq[-1][-1][-1]
             endPoint.transform( coordTransform )
-            csvWriter.writerow([ str( encodedSurveyId ),  str( encodedStratumId ),  str( encodedTransectId ),  "",  "",  startPoint.y(),  startPoint.x(),  endPoint.y(), endPoint.x(),  "", "" ])
+            csvWriter.writerow([ str( encodedSurveyId ),  str( encodedStratumId ),  str( encodedTransectId ), "", "", "",  startPoint.y(),  startPoint.x(),  endPoint.y(), endPoint.x(),  "", "" ])
         elif geom.type() == QgsWkbTypes.PointGeometry:
             point = geom.get()
             point.transform( coordTransform )
-            csvWriter.writerow([ str( encodedSurveyId ),  str( encodedStratumId ),  str( encodedTransectId ),  "",  "",  point.y(),  point.x(),  '',  '',  '', '' ] )
+            csvWriter.writerow([ str( encodedSurveyId ),  str( encodedStratumId ),  str( encodedTransectId ), "", "", "",  point.y(),  point.x(),  '',  '',  '', '' ] )
 
 def writeSurveyCSV( outputDirectory,  survey,  projectCode,  date_s,  date_f,  contactName,  area,  mainspp,  comments ):
     outputFilePath = outputDirectory + "/" + "Survey.csv"
