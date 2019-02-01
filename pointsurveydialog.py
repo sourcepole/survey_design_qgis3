@@ -101,6 +101,16 @@ class PointSurveyDialog( QtWidgets.QDialog, FORM_CLASS ):
         gpxFileName = gpxFileInfo.path() + '/' + gpxFileInfo.baseName() + '.gpx'
         writePointShapeAsGPX( outputShape, 'station_co', '',  gpxFileName )
         
+        #write XLSX output
+        workbook = xlsxwriter.Workbook( saveDir + '/survey.xlsx')
+        writeSurveyXLSX( workbook, surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
+        writeStratumXLSX( workbook, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
+        writeStratumBoundaryXLSX( workbook, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )
+        writeStationXLSX( workbook, samplePointLayer, "stratumid",  "station_id",  surveyProps.survey() )
+        writeCatchXLSX( workbook )
+        writeLengthXLSX( workbook )
+        workbook.close()
+        
         #write csv files
         writeSurveyCSV( saveDir,  surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
         writeStratumCSV( saveDir, strataLayer, self.mStrataIdComboBox.currentText(),  surveyProps.survey() )

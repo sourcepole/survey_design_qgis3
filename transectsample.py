@@ -119,7 +119,7 @@ class TransectSample:
                 print( samplePoint )
                 nIterations += 1
                 
-                if samplePoint is None:
+                if samplePoint is None or samplePoint.isNull():
                     continue
                 
                 samplePointXY = samplePoint.asPoint()
