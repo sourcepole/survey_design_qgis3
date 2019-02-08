@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtXml import QDomDocument, QDomElement, QDomNode
 import csv
 import string
-import xlsxwriter
+from .xlsxwriter import *
 
 def fillLayerComboBox( comboBox,  geometryType,  noneEntry ):
     comboBox.clear()

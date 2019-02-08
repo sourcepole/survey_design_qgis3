@@ -13,6 +13,8 @@ from .surveyutils import *
 from .transectsample import *
 from .surveyproperties import *
 
+from .xlsxwriter import *
+
 FORM_CLASS = uic.loadUiType(os.path.join( os.path.dirname(__file__), 'transectsurveydialogbase.ui'))[0]
 
 class TransectSurveyDialog( QtWidgets.QDialog, FORM_CLASS ):
@@ -119,7 +121,7 @@ class TransectSurveyDialog( QtWidgets.QDialog, FORM_CLASS ):
         transectLayer = QgsVectorLayer( outputLineShape,  "transect",  "ogr" )
         
         #write XLSX output
-        workbook = xlsxwriter.Workbook( saveDir + '/survey.xlsx')
+        workbook = Workbook( saveDir + '/survey.xlsx')
         writeSurveyXLSX( workbook, surveyProps.survey(),  surveyProps.projectCode(), surveyProps.date_s() , surveyProps.date_f(),  surveyProps.contactName(),  surveyProps.areas(), surveyProps.mainspp(),  surveyProps.comments() )
         writeStationXLSX( workbook, transectLayer, "stratum_id",  "station_id",  surveyProps.survey() )
         writeStratumXLSX( workbook, self.stratumLayer(), self.mStrataIdAttributeComboBox.currentText(),  surveyProps.survey() )
